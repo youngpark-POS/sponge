@@ -25,7 +25,7 @@ void get_URL(const string &host, const string &path) {
     sock.write(request1);
     sock.write(request2);
     sock.write(request3);
-    while(!sock.eof()) {
+    while (!sock.eof()) {
         response = sock.read();
         cout << response;
     }

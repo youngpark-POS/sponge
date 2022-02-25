@@ -12,17 +12,12 @@ void DUMMY_CODE(Targs &&... /* unused */) {}
 
 using namespace std;
 
-ByteStream::ByteStream(const size_t _capacity): 
-    max_capacity(_capacity), 
-    used_capacity(0),
-    byte_read(0),
-    byte_written(0),
-    is_input_ended(false) {}
+ByteStream::ByteStream(const size_t _capacity)
+    : max_capacity(_capacity), used_capacity(0), byte_read(0), byte_written(0), is_input_ended(false) {}
 
 size_t ByteStream::write(const string &data) {
     size_t remaining_capacity = max_capacity - used_capacity;
-    size_t writable_bytes = remaining_capacity < data.length() ?
-                            remaining_capacity : data.length();
+    size_t writable_bytes = remaining_capacity < data.length() ? remaining_capacity : data.length();
     bytestring += data.substr(0, writable_bytes);
     used_capacity += writable_bytes;
     byte_written += writable_bytes;
@@ -31,15 +26,13 @@ size_t ByteStream::write(const string &data) {
 
 //! \param[in] len bytes will be copied from the output side of the buffer
 string ByteStream::peek_output(const size_t len) const {
-    size_t readable_bytes = used_capacity < len ?
-                            used_capacity : len;
+    size_t readable_bytes = used_capacity < len ? used_capacity : len;
     return bytestring.substr(bytestring.length() - readable_bytes);
 }
 
 //! \param[in] len bytes will be removed from the output side of the buffer
-void ByteStream::pop_output(const size_t len) { 
-    size_t readable_bytes = used_capacity < len ?
-                            used_capacity : len;
+void ByteStream::pop_output(const size_t len) {
+    size_t readable_bytes = used_capacity < len ? used_capacity : len;
     bytestring = bytestring.erase(0, len);
     used_capacity -= readable_bytes;
     byte_read += readable_bytes;
@@ -54,9 +47,7 @@ std::string ByteStream::read(const size_t len) {
     return result;
 }
 
-void ByteStream::end_input() { 
-    is_input_ended = true; 
-}
+void ByteStream::end_input() { is_input_ended = true; }
 
 bool ByteStream::input_ended() const { return is_input_ended; }
 
