@@ -1,10 +1,13 @@
 #ifndef SPONGE_LIBSPONGE_STREAM_REASSEMBLER_HH
 #define SPONGE_LIBSPONGE_STREAM_REASSEMBLER_HH
 
+#include "buffer.hh"
 #include "byte_stream.hh"
 
+#include <bitset>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 //! \brief A class that assembles a series of excerpts from a byte stream (possibly out of order,
 //! possibly overlapping) into an in-order byte stream.
@@ -12,8 +15,17 @@ class StreamReassembler {
   private:
     // Your code here -- add private members as necessary.
 
-    ByteStream _output;  //!< The reassembled in-order byte stream
-    size_t _capacity;    //!< The maximum number of bytes
+    ByteStream _output;             //!< The reassembled in-order byte stream
+    size_t _capacity;               //!< The maximum number of bytes
+    std::vector<char> segments;     //!< Unassembled segments
+    std::vector<char> byte_status;  //!< Status of segments (written, empty, used)
+    size_t stream_starts_at;        //!< Actual start index of segments vector
+    size_t stream_last_byte;        //!< Index of the last byte
+    bool got_eof;                   //!< Whether StreamReassembler got EOF or not
+
+    bool is_empty_byte(size_t idx) const { return byte_status[idx] & 0x01; }
+    bool is_written_byte(size_t idx) const { return byte_status[idx] & 0x02; }
+    bool is_used_byte(size_t idx) const { return byte_status[idx] & 0x04; }
 
   public:
     //! \brief Construct a `StreamReassembler` that will store up to `capacity` bytes.
