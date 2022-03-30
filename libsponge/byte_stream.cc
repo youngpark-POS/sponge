@@ -27,13 +27,13 @@ size_t ByteStream::write(const string &data) {
 //! \param[in] len bytes will be copied from the output side of the buffer
 string ByteStream::peek_output(const size_t len) const {
     size_t readable_bytes = used_capacity < len ? used_capacity : len;
-    return bytestring.substr(bytestring.length() - readable_bytes);
+    return bytestring.substr(0, readable_bytes);
 }
 
 //! \param[in] len bytes will be removed from the output side of the buffer
 void ByteStream::pop_output(const size_t len) {
     size_t readable_bytes = used_capacity < len ? used_capacity : len;
-    bytestring = bytestring.erase(0, len);
+    bytestring = bytestring.erase(0, readable_bytes);
     used_capacity -= readable_bytes;
     byte_read += readable_bytes;
 }
