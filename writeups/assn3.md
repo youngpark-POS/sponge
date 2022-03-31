@@ -55,10 +55,18 @@ Program Structure and Design of the TCPSender:
 
 Implementation Challenges:
 [
-    How to fill window? 
-    When to stop filling window? -> 3 conditions exist
-    how to save outgoing segments efficiently? -> I got several SegFaults :(
-    How to use move() or other method without SegFault?
+    SYN flag can be calculated with simple condition: next abs seqno == 0.
+    but, it was quite difficult to find a conditions that set FIN flag.
+    the followings are conditions twhich set FIN flag that I found.
+    first, EOf of instream should be set. 
+    if not, instream is not yet finished.
+    second, sequence payload's length should not exceed MAX_PAYLOAD_SIZE.
+    if not, FIN flag cannot be sent though instream set EOF.
+    and last, overall header size should not exceed remaining window size.
+    if not, FIN flag cannot be sent too.
+
+    by solving this problem, I concretely understood about differences of 
+    sequence space length and payload length, and also seqno and abs-seqno.
 ]
 
 Remaining Bugs:
