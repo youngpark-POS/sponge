@@ -31,8 +31,9 @@ class TCPConnection {
     // prerequisite 1: inbound stream has fully assembled and ended
     bool _prereq_1() { return _receiver.unassembled_bytes() == 0 && _receiver.stream_out().input_ended(); }
     // prerequisite 2: outbound stream has ended and fully sent
-    bool _prereq_2() { return _sender.stream_in().eof() && 
-                              _sender.next_seqno_absolute() == _sender.stream_in().bytes_written() + 2; }
+    bool _prereq_2() {
+        return _sender.stream_in().eof() && _sender.next_seqno_absolute() == _sender.stream_in().bytes_written() + 2;
+    }
     // prerequisite 3: outbound stream has fully acked by remote peer
     bool _prereq_3() { return _sender.bytes_in_flight() == 0; }
 
